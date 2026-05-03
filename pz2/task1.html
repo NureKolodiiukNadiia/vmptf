@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Animals</title>
+</head>
+<body>
+<h1>Список тварин</h1>
+<ul id="animalsList"></ul>
+<!--7.Відображення даних про тварин:-->
+
+<!--• Створіть файл HTML з елементом<script>.-->
+<!--• Використовуйте fetch для завантаження JSON-файлу з даними про тварин (назва, тип, фото).-->
+<!--    • Розберіть JSON-файл за допомогою JSON.parse().-->
+<!--    • Створіть список HTML з елементами <li> для кожної тварини, що містить назву та фото.-->
+    
+<script>
+    fetch("https://extinct-api.herokuapp.com/api/v1/animal/10")
+        .then(response => response.text())
+        .then(jsonText => {
+            const animals = JSON.parse(jsonText).data;
+            const list = document.getElementById("animalsList");
+            animals.forEach(animal => {
+                const li = document.createElement("li");
+                li.innerHTML = `
+                        <h3>${animal.commonName}</h3>
+                        <p>Опис: ${animal.shortDesc}</p>
+                        <img src="${animal.imageSrc}" alt="${animal.commonName}" width="200">
+                    `;
+
+                list.appendChild(li);
+            });
+        })
+        .catch(error => {
+            console.log("Помилка:", error);
+        });
+</script>
+</body>
+</html>
