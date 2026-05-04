@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block title %}Visit History{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1><i class="bi bi-journal-text"></i> Visit History</h1>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">Guest</label>
+                <select name="guest" class="form-control">
+                    <option value="">All Guests</option>
+                    {% for guest in guests %}
+                        <option value="{{ guest.id }}" {% if current_guest == guest.id|stringformat:"s" %}selected{% endif %}>
+                            {{ guest.full_name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Room</label>
+                <select name="room" class="form-control">
+                    <option value="">All Rooms</option>
+                    {% for room in rooms %}
+                        <option value="{{ room.id }}" {% if current_room == room.id|stringformat:"s" %}selected{% endif %}>
+                            Room {{ room.room_number }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Status</label>
+                <select name="status" class="form-control">
+                    <option value="">All</option>
+                    <option value="active" {% if current_status == "active" %}selected{% endif %}>Active</option>
+                    <option value="completed" {% if current_status == "completed" %}selected{% endif %}>Completed</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Days Back</label>
+                <input type="number" name="days" class="form-control" value="{{ current_days }}" min="1" max="365">
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-funnel"></i> Filter
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Visits Table -->
+<div class="card">
+    <div class="card-body">
+        {% if visits %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Guest</th>
+                        <th>Room</th>
+                        <th>Entry Time</th>
+                        <th>Exit Time</th>
+                        <th>Duration</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for visit in visits %}
+                    <tr>
+                        <td>{{ visit.guest.full_name }}</td>
+                        <td>
+                            {% if visit.room %}
+                                <span class="badge bg-primary">{{ visit.room.room_number }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Common</span>
+                            {% endif %}
+                        </td>
+                        <td><small>{{ visit.entry_time|date:"M d, H:i" }}</small></td>
+                        <td>
+                            {% if visit.exit_time %}
+                                <small>{{ visit.exit_time|date:"M d, H:i" }}</small>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if visit.duration %}
+                                <small>{{ visit.duration }}</small>
+                            {% else %}
+                                <span class="badge bg-success">Active</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if visit.is_active %}
+                                <span class="badge badge-active">Active</span>
+                            {% else %}
+                                <span class="badge badge-completed">Completed</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'visitor:visit_detail' visit.id %}" class="btn btn-sm btn-outline-info">
+                                <i class="bi bi-eye"></i> View
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <nav>
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    </li>
+                {% endif %}
+                
+                <li class="page-item disabled">
+                    <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                </li>
+                
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-inbox" style="font-size: 4rem; color: #6c757d;"></i>
+            <h4 class="mt-3 text-muted">No Visits Found</h4>
+            <p class="text-muted">Try adjusting your filters</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

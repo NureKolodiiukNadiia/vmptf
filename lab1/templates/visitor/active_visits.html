@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Active Visits{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1><i class="bi bi-clock-history"></i> Active Visits</h1>
+                <p class="text-muted">Currently {{ total_guests }} guests on premises</p>
+            </div>
+            <a href="{% url 'visitor:checkin' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Check In Guest
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Summary Cards -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card stat-card primary">
+            <div class="card-body">
+                <h6 class="text-muted">Total Guests</h6>
+                <h2>{{ total_guests }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card success">
+            <div class="card-body">
+                <h6 class="text-muted">With Room Assignment</h6>
+                <h2>{{ guests_with_rooms }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card info">
+            <div class="card-body">
+                <h6 class="text-muted">Common Area</h6>
+                <h2>{{ guests_common_area }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Active Visits Table -->
+<div class="card">
+    <div class="card-body">
+        {% if visits %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Guest Name</th>
+                        <th>Room</th>
+                        <th>Entry Time</th>
+                        <th>Duration</th>
+                        <th>Processed By</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for visit in visits %}
+                    <tr>
+                        <td>
+                            <strong>{{ visit.guest.full_name }}</strong>
+                            {% if visit.guest.email %}
+                                <br><small class="text-muted">{{ visit.guest.email }}</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if visit.room %}
+                                <span class="badge bg-primary">{{ visit.room.room_number }}</span>
+                                <br><small class="text-muted">Capacity: {{ visit.room.capacity }}</small>
+                            {% else %}
+                                <span class="badge bg-secondary">Common Area</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ visit.entry_time|date:"M d, Y H:i" }}</td>
+                        <td>
+                            <span class="badge bg-success">{{ visit.entry_time|timesince }}</span>
+                        </td>
+                        <td>{{ visit.processed_by.username|default:"N/A" }}</td>
+                        <td>
+                            <a href="{% url 'visitor:checkout' visit.id %}" class="btn btn-sm btn-danger">
+                                <i class="bi bi-box-arrow-right"></i> Check Out
+                            </a>
+                            <a href="{% url 'visitor:visit_detail' visit.id %}" class="btn btn-sm btn-outline-info">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-inbox" style="font-size: 4rem; color: #6c757d;"></i>
+            <h4 class="mt-3 text-muted">No Active Visits</h4>
+            <p class="text-muted">There are currently no guests on premises</p>
+            <a href="{% url 'visitor:checkin' %}" class="btn btn-primary mt-3">
+                <i class="bi bi-plus-circle"></i> Check In First Guest
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

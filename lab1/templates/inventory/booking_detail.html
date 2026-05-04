@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Booking #{{ booking.id }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="bi bi-file-earmark-text"></i> Booking #{{ booking.id }}</h1>
+            {% if booking.status == 'PENDING' %}
+                <span class="badge bg-warning text-dark fs-5">{{ booking.get_status_display }}</span>
+            {% elif booking.status == 'CONFIRMED' %}
+                <span class="badge bg-success fs-5">{{ booking.get_status_display }}</span>
+            {% elif booking.status == 'CANCELLED' %}
+                <span class="badge bg-danger fs-5">{{ booking.get_status_display }}</span>
+            {% else %}
+                <span class="badge bg-secondary fs-5">{{ booking.get_status_display }}</span>
+            {% endif %}
+        </div>
+        
+        <div class="card mb-3">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Guest Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-2">
+                    <div class="col-sm-4"><strong>Name:</strong></div>
+                    <div class="col-sm-8">{{ booking.guest_name }}</div>
+                </div>
+                {% if booking.guest_email %}
+                <div class="row mb-2">
+                    <div class="col-sm-4"><strong>Email:</strong></div>
+                    <div class="col-sm-8">
+                        <a href="mailto:{{ booking.guest_email }}">{{ booking.guest_email }}</a>
+                    </div>
+                </div>
+                {% endif %}
+                {% if booking.guest_phone %}
+                <div class="row">
+                    <div class="col-sm-4"><strong>Phone:</strong></div>
+                    <div class="col-sm-8">
+                        <a href="tel:{{ booking.guest_phone }}">{{ booking.guest_phone }}</a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card mb-3">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Booking Details</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-2">
+                    <div class="col-sm-4"><strong>Room:</strong></div>
+                    <div class="col-sm-8">
+                        <span class="badge bg-primary fs-6">{{ booking.room.room_number }}</span>
+                        <span class="text-muted">(Capacity: {{ booking.room.capacity }})</span>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-4"><strong>Check-in Date:</strong></div>
+                    <div class="col-sm-8">{{ booking.check_in_date|date:"F d, Y" }}</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-4"><strong>Check-out Date:</strong></div>
+                    <div class="col-sm-8">{{ booking.check_out_date|date:"F d, Y" }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4"><strong>Duration:</strong></div>
+                    <div class="col-sm-8">
+                        {% widthratio booking.check_out_date|timeuntil:booking.check_in_date 86400 1 %} night(s)
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mb-3">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Metadata</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-2">
+                    <div class="col-sm-4"><strong>Created By:</strong></div>
+                    <div class="col-sm-8">{{ booking.created_by.username|default:"N/A" }}</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-4"><strong>Created At:</strong></div>
+                    <div class="col-sm-8">{{ booking.created_at|date:"F d, Y H:i" }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4"><strong>Last Updated:</strong></div>
+                    <div class="col-sm-8">{{ booking.updated_at|date:"F d, Y H:i" }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="d-flex justify-content-between">
+            <a href="{% url 'inventory:booking_list' %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Bookings
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
