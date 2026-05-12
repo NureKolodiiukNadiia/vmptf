@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">PZ3 Lab</string>
+
+    <string name="title_main">Lab Tasks</string>
+    <string name="btn_holidays">Holidays by Month</string>
+    <string name="btn_guess_card">Guess the Card</string>
+    <string name="btn_file_stats">File Statistics</string>
+
+    <string name="title_holidays">Holidays</string>
+    <string name="month_prompt">Select month</string>
+    <string name="no_data">No data</string>
+
+    <string name="title_guess_card">Guess Card</string>
+    <string name="card_1">Card 1</string>
+    <string name="card_2">Card 2</string>
+    <string name="card_3">Card 3</string>
+    <string name="card_closed">Closed</string>
+    <string name="new_game">New Game</string>
+    <string name="guess_prompt">Pick one card</string>
+    <string name="guess_win">You guessed right!</string>
+    <string name="guess_lose">No win. Winning card: %1$d</string>
+    <string name="card_win">WIN</string>
+    <string name="card_lose">LOSE</string>
+
+    <string name="title_file_stats">File Statistics</string>
+    <string name="pick_file">Pick File</string>
+    <string name="letters_default">Letters: 0</string>
+    <string name="spaces_default">Spaces: 0</string>
+    <string name="symbols_default">Symbols: 0</string>
+    <string name="letters">Letters: %1$d</string>
+    <string name="spaces">Spaces: %1$d</string>
+    <string name="symbols">Symbols: %1$d</string>
+    <string name="file_pick_canceled">File picker canceled</string>
+    <string name="file_read_error">Could not read file</string>
+</resources>
