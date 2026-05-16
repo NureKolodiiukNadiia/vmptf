@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Bookings{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+    <h1>Bookings</h1>
+    <a href="{% url 'hotel:booking_create' %}" class="btn btn-primary">New Booking</a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        {% if bookings %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Client</th>
+                        <th>Hotel</th>
+                        <th>Room</th>
+                        <th>Check-in</th>
+                        <th>Check-out</th>
+                        <th>Status</th>
+                        <th>Total</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in bookings %}
+                    <tr>
+                        <td>#{{ booking.id }}</td>
+                        <td>{{ booking.client }}</td>
+                        <td>{{ booking.room.hotel.name }}</td>
+                        <td>{{ booking.room.room_number }}</td>
+                        <td>{{ booking.check_in_date }}</td>
+                        <td>{{ booking.check_out_date }}</td>
+                        <td>{{ booking.get_status_display }}</td>
+                        <td>{{ booking.total_price }}</td>
+                        <td class="d-flex gap-2">
+                            <a href="{% url 'hotel:booking_detail' booking.id %}" class="btn btn-sm btn-outline-info">View</a>
+                            <form method="post" action="{% url 'hotel:booking_delete' booking.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="mb-0">No bookings yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

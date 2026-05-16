@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Booking{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <h1>Create Booking</h1>
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        {{ form.client.label_tag }}
+                        {{ form.client }}
+                        {% if form.client.errors %}<div class="text-danger small">{{ form.client.errors }}</div>{% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.room.label_tag }}
+                        {{ form.room }}
+                        {% if form.room.errors %}<div class="text-danger small">{{ form.room.errors }}</div>{% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.services.label_tag }}
+                        {{ form.services }}
+                        <small class="form-text text-muted d-block">{{ form.services.help_text }}</small>
+                        {% if form.services.errors %}<div class="text-danger small">{{ form.services.errors }}</div>{% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.check_in_date.label_tag }}
+                        {{ form.check_in_date }}
+                        {% if form.check_in_date.errors %}<div class="text-danger small">{{ form.check_in_date.errors }}</div>{% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.check_out_date.label_tag }}
+                        {{ form.check_out_date }}
+                        {% if form.check_out_date.errors %}<div class="text-danger small">{{ form.check_out_date.errors }}</div>{% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.status.label_tag }}
+                        {{ form.status }}
+                        {% if form.status.errors %}<div class="text-danger small">{{ form.status.errors }}</div>{% endif %}
+                    </div>
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                    {% endif %}
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'hotel:booking_list' %}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Create Booking</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Booking #{{ booking.id }}{% endblock %}
+
+{% block content %}
+<h1>Booking #{{ booking.id }}</h1>
+<div class="card">
+    <div class="card-body">
+        <p><strong>Client:</strong> {{ booking.client }}</p>
+        <p><strong>Email:</strong> {{ booking.client.email }}</p>
+        <p><strong>Phone:</strong> {{ booking.client.phone|default:'-' }}</p>
+        <p><strong>Hotel:</strong> {{ booking.room.hotel.name }}</p>
+        <p><strong>Room:</strong> {{ booking.room.room_number }}</p>
+        <p><strong>Check-in:</strong> {{ booking.check_in_date }}</p>
+        <p><strong>Check-out:</strong> {{ booking.check_out_date }}</p>
+        <p><strong>Status:</strong> {{ booking.get_status_display }}</p>
+        <p><strong>Total:</strong> {{ booking.total_price }}</p>
+        <p><strong>Services:</strong>
+            {% for service in booking.services.all %}
+                {{ service.name }}{% if not forloop.last %}, {% endif %}
+            {% empty %}
+                -
+            {% endfor %}
+        </p>
+        <a href="{% url 'hotel:booking_list' %}" class="btn btn-secondary">Back</a>
+    </div>
+</div>
+{% endblock %}
